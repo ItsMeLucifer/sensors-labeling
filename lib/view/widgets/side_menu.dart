@@ -56,6 +56,35 @@ class SideMenu extends ConsumerWidget {
     final sensorsVM = ref.watch(sensorsProvider);
     return Column(
       children: [
+        SizedBox(
+          height: 30,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Text('Label: '),
+              DropdownButton(
+                  value: sensorsVM.labels[sensorsVM.labelIndex],
+                  items: sensorsVM.labels
+                      .map(
+                        (label) => DropdownMenuItem(
+                          value: label,
+                          child: Text(
+                            label,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    if (value == null) return;
+                    sensorsVM.labelIndex = sensorsVM.labels.indexOf(value);
+                  }),
+            ],
+          ),
+        ),
         ..._buildNumberPicker(
           context,
           name: 'Delay in the start of sensors data recording (from now)',
@@ -100,6 +129,7 @@ class SideMenu extends ConsumerWidget {
         textAlign: TextAlign.center,
       ),
       NumberPicker(
+        itemHeight: 45,
         value: value,
         minValue: min,
         maxValue: max,
@@ -122,14 +152,31 @@ class SideMenu extends ConsumerWidget {
         style: Theme.of(context).textTheme.headlineSmall,
       ),
       _buildDelayTimer(context, ref),
-      if (sensorsVM.recordingState == RecordingState.saved) ...[
+      if (sensorsVM.recordingState == RecordingState.recorded) ...[
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: Text(sensorsVM.savedDataInfo),
         ),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            border: Border.all(color: Colors.grey[200]!, width: 2),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Text(
+              "Path: ${sensorsVM.filePath == '' ? 'NOT SET' : sensorsVM.filePath}"),
+        ),
+        Container(
+          height: 200,
+          padding: const EdgeInsets.all(10.0),
+          child: SingleChildScrollView(
+            child: Text('FileData: ${sensorsVM.fileContent}'),
+          ),
+        ),
         ElevatedButton(
           onPressed: sensorsVM.restart,
-          child: const Text('OK'),
+          child: const Text('SAVE'),
         )
       ],
     ];

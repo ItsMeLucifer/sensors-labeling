@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
-enum RecordingState { stagnation, awaiting, recording, saved }
+enum RecordingState { stagnation, awaiting, recording, recorded }
 
 class SensorsViewModel extends ChangeNotifier {
   ScrollController accelerometerScrollController = ScrollController();
@@ -57,7 +59,7 @@ class SensorsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool slowMode = true;
+  bool slowMode = false;
   void toggleSlowMode() {
     slowMode = !slowMode;
     notifyListeners();
@@ -118,6 +120,7 @@ class SensorsViewModel extends ChangeNotifier {
     debugPrint(
         'start delay : $recordingStartDelay\nstop delay: $recordingStopDelay');
     recordingState = RecordingState.awaiting;
+    setFilePath();
     Future.delayed(
       Duration(seconds: recordingStartDelay),
       () {
@@ -142,10 +145,35 @@ class SensorsViewModel extends ChangeNotifier {
     return "${_acceleratorSavedValues.length} values from accelerometer\n${_gyroSavedValues.length} values from gyro\n${_magnetometerSavedValues.length} values from magnetometer";
   }
 
-  void saveData() {
-    recordingState = RecordingState.saved;
-    debugPrint(
-        "SAVED:\n${_acceleratorSavedValues.length} values from accelerometer\n${_gyroSavedValues.length} values from gyro\n${_magnetometerSavedValues.length} values from magnetometer");
+  String filePath = '';
+
+  Future setFilePath() async {
+    // final directory = await getExternalStorageDirectory();
+    Directory(
+            '/storage/emulated/0/Download/sensors_labeling_data/${labels[labelIndex]}')
+        .createSync(recursive: true);
+    filePath =
+        '/storage/emulated/0/Download/sensors_labeling_data/${labels[labelIndex]}/${DateTime.now().microsecondsSinceEpoch}.txt';
+  }
+
+  List<String> labels = ['FALLING', 'CLIMBING', 'WALKING'];
+
+  int labelIndex = 0;
+
+  void saveData() async {
+    final File file = File(filePath);
+    await file.writeAsString(
+        '$_acceleratorSavedValues;$_gyroSavedValues;$_magnetometerSavedValues;${_recordingStopDelay - _recordingStartDelay}');
+    recordingState = RecordingState.recorded;
+    getStringFromFile();
+  }
+
+  String fileContent = '';
+
+  void getStringFromFile() async {
+    final File file = File(filePath);
+    fileContent = await file.readAsString();
+    notifyListeners();
   }
 
   void restart() {

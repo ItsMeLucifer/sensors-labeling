@@ -65,23 +65,32 @@ class SensorsInfoDisplay extends ConsumerWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'X: ${values[0].toStringAsFixed(3)}',
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: const Color.fromARGB(255, 255, 0, 0),
-                  ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                'X: ${values[0].toStringAsFixed(3)} ',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: const Color.fromARGB(255, 255, 0, 0),
+                    ),
+              ),
             ),
-            Text(
-              'Y: ${values[1].toStringAsFixed(3)}',
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: const Color.fromARGB(255, 0, 255, 17),
-                  ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                'Y: ${values[1].toStringAsFixed(3)} ',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: const Color.fromARGB(255, 0, 255, 17),
+                    ),
+              ),
             ),
-            Text(
-              'Z: ${values[2].toStringAsFixed(3)}',
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: const Color.fromARGB(255, 0, 30, 255),
-                  ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                'Z: ${values[2].toStringAsFixed(3)}',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: const Color.fromARGB(255, 0, 30, 255),
+                    ),
+              ),
             ),
           ],
         );
