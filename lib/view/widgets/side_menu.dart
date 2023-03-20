@@ -31,6 +31,7 @@ class SideMenu extends ConsumerWidget {
               context,
               'Recording options',
               _buildRecordingOptions(context, ref),
+              noBottom: true,
             ),
           if (sensorsVM.recordingState != RecordingState.stagnation)
             ..._buildRecordingStatus(context, ref),
@@ -39,7 +40,8 @@ class SideMenu extends ConsumerWidget {
     );
   }
 
-  List<Widget> _buildSection(BuildContext context, String name, Widget child) {
+  List<Widget> _buildSection(BuildContext context, String name, Widget child,
+      {bool noBottom = false}) {
     return [
       Text(
         name,
@@ -48,7 +50,7 @@ class SideMenu extends ConsumerWidget {
       ),
       const Divider(),
       child,
-      const Divider(),
+      if (!noBottom) const Divider(),
     ];
   }
 
@@ -57,31 +59,34 @@ class SideMenu extends ConsumerWidget {
     return Column(
       children: [
         SizedBox(
-          height: 30,
+          height: 40,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Text('Label: '),
-              DropdownButton(
-                  value: sensorsVM.labels[sensorsVM.labelIndex],
-                  items: sensorsVM.labels
-                      .map(
-                        (label) => DropdownMenuItem(
-                          value: label,
-                          child: Text(
-                            label,
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
+              const Text('Label:'),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: DropdownButton(
+                    value: sensorsVM.labels[sensorsVM.labelIndex],
+                    items: sensorsVM.labels
+                        .map(
+                          (label) => DropdownMenuItem(
+                            value: label,
+                            child: Text(
+                              label,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    if (value == null) return;
-                    sensorsVM.labelIndex = sensorsVM.labels.indexOf(value);
-                  }),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      if (value == null) return;
+                      sensorsVM.labelIndex = sensorsVM.labels.indexOf(value);
+                    }),
+              ),
             ],
           ),
         ),

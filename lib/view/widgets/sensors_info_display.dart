@@ -27,13 +27,15 @@ class SensorsInfoDisplay extends ConsumerWidget {
           'Magnetometer',
           sensorsVM.magnetometerScrollController,
           sensorsVM.magnetometerValues,
+          noBottom: true,
         ),
       ],
     );
   }
 
   List<Widget> _buildSection(BuildContext context, String title,
-      ScrollController controller, List<List<double>> items) {
+      ScrollController controller, List<List<double>> items,
+      {bool noBottom = false}) {
     return [
       Text(
         title,
@@ -48,7 +50,7 @@ class SensorsInfoDisplay extends ConsumerWidget {
           items,
         ),
       ),
-      const Divider(),
+      if (!noBottom) const Divider(),
     ];
   }
 

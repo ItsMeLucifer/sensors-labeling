@@ -156,7 +156,7 @@ class SensorsViewModel extends ChangeNotifier {
         '/storage/emulated/0/Download/sensors_labeling_data/${labels[labelIndex]}/${DateTime.now().microsecondsSinceEpoch}.txt';
   }
 
-  List<String> labels = ['FALLING', 'CLIMBING', 'WALKING'];
+  List<String> labels = ['FALLING', 'CLIMBING', 'WALKING', 'SUCCESSFULL'];
 
   int labelIndex = 0;
 
