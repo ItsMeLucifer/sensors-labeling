@@ -173,15 +173,27 @@ class SideMenu extends ConsumerWidget {
               "Path: ${sensorsVM.filePath == '' ? 'NOT SET' : sensorsVM.filePath}"),
         ),
         Container(
-          height: 200,
+          height: MediaQuery.of(context).size.height / 5,
           padding: const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
             child: Text('FileData: ${sensorsVM.fileContent}'),
           ),
         ),
-        ElevatedButton(
-          onPressed: sensorsVM.restart,
-          child: const Text('SAVE'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: sensorsVM.removeAndRestart,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              child: const Text('CANCEL'),
+            ),
+            ElevatedButton(
+              onPressed: sensorsVM.restart,
+              child: const Text('SAVE'),
+            ),
+          ],
         )
       ],
     ];
@@ -192,7 +204,10 @@ class SideMenu extends ConsumerWidget {
     switch (sensorsVM.recordingState) {
       case RecordingState.awaiting:
         return DelayTimer(
-            key: const Key("start"), seconds: sensorsVM.recordingStartDelay);
+          key: const Key("start"),
+          seconds: sensorsVM.recordingStartDelay,
+          ref: ref,
+        );
       case RecordingState.recording:
         return DelayTimer(
             key: const Key("stop"),

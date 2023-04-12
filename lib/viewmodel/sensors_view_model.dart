@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 enum RecordingState { stagnation, awaiting, recording, recorded }
@@ -17,6 +19,12 @@ class SensorsViewModel extends ChangeNotifier {
     _accelerometerValues = list;
     notifyListeners();
   }
+
+  final player = AudioPlayer();
+
+  static const String startSoundPath = 'mp3/start.mp3';
+  static const String stopSoundPath = 'mp3/stop.mp3';
+  static const String tickSoundPath = 'mp3/tick.mp3';
 
   void addAccelerometerValue(List<double> values) {
     _accelerometerValues.add(values);
@@ -124,6 +132,7 @@ class SensorsViewModel extends ChangeNotifier {
     Future.delayed(
       Duration(seconds: recordingStartDelay),
       () {
+        player.play(AssetSource(startSoundPath), volume: 200);
         recordingState = RecordingState.recording;
         stopDataRecording();
       },
@@ -133,7 +142,10 @@ class SensorsViewModel extends ChangeNotifier {
   Future<void> stopDataRecording() async {
     Future.delayed(
       Duration(seconds: recordingStopDelay - recordingStartDelay),
-      saveData,
+      () {
+        player.play(AssetSource(stopSoundPath), volume: 200);
+        saveData();
+      },
     );
   }
 
@@ -181,5 +193,11 @@ class SensorsViewModel extends ChangeNotifier {
     _gyroSavedValues.clear();
     _magnetometerSavedValues.clear();
     recordingState = RecordingState.stagnation;
+  }
+
+  void removeAndRestart() {
+    final File file = File(filePath);
+    restart();
+    file.delete();
   }
 }

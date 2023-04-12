@@ -1,10 +1,15 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sensors_labeling/main.dart';
+import 'package:sensors_labeling/viewmodel/sensors_view_model.dart';
 
 class DelayTimer extends StatefulWidget {
   final int seconds;
-  const DelayTimer({required this.seconds, super.key});
+  final WidgetRef? ref;
+  const DelayTimer({required this.seconds, this.ref, super.key});
 
   @override
   State<DelayTimer> createState() => _DelayTimerState();
@@ -17,6 +22,10 @@ class _DelayTimerState extends State<DelayTimer> {
   void initState() {
     seconds = widget.seconds;
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      if (widget.ref != null && seconds < 5 && seconds > 0) {
+        final sensorsVM = widget.ref!.read(sensorsProvider);
+        sensorsVM.player.play(AssetSource(SensorsViewModel.tickSoundPath));
+      }
       setState(() {
         seconds--;
       });
