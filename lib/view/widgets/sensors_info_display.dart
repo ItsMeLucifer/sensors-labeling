@@ -70,7 +70,7 @@ class SensorsInfoDisplay extends ConsumerWidget {
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                'X: ${values[0].toStringAsFixed(3)} ',
+                'X: ${values[0].toStringAsFixed(2)} ',
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: const Color.fromARGB(255, 255, 0, 0),
                     ),
@@ -79,7 +79,7 @@ class SensorsInfoDisplay extends ConsumerWidget {
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                'Y: ${values[1].toStringAsFixed(3)} ',
+                'Y: ${values[1].toStringAsFixed(2)} ',
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: const Color.fromARGB(255, 0, 255, 17),
                     ),
@@ -88,7 +88,7 @@ class SensorsInfoDisplay extends ConsumerWidget {
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                'Z: ${values[2].toStringAsFixed(3)}',
+                'Z: ${values[2].toStringAsFixed(2)}',
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: const Color.fromARGB(255, 0, 30, 255),
                     ),

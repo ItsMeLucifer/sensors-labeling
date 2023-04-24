@@ -96,7 +96,7 @@ class SideMenu extends ConsumerWidget {
           value: sensorsVM.recordingStartDelay,
           onChanged: sensorsVM.setRecordingStartDelay,
           min: 0,
-          max: 15,
+          max: 30,
         ),
         ..._buildNumberPicker(
           context,
@@ -157,6 +157,14 @@ class SideMenu extends ConsumerWidget {
         style: Theme.of(context).textTheme.headlineSmall,
       ),
       _buildDelayTimer(context, ref),
+      if (sensorsVM.recordingState == RecordingState.recording)
+        ElevatedButton(
+          onPressed: sensorsVM.saveData,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+          ),
+          child: const Text('STOP'),
+        ),
       if (sensorsVM.recordingState == RecordingState.recorded) ...[
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
