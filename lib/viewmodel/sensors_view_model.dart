@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 enum RecordingState { stagnation, awaiting, recording, recorded }
 
@@ -132,9 +130,13 @@ class SensorsViewModel extends ChangeNotifier {
     Future.delayed(
       Duration(seconds: recordingStartDelay),
       () {
-        player.play(AssetSource(startSoundPath), volume: 200);
         recordingState = RecordingState.recording;
         stopDataRecording();
+        // try {
+        //   player.play(AssetSource(startSoundPath), volume: 200);
+        // } catch (e, stack) {
+        //   debugPrint('Start recording sound error: $e\n$stack');
+        // }
       },
     );
   }
@@ -143,8 +145,12 @@ class SensorsViewModel extends ChangeNotifier {
     Future.delayed(
       Duration(seconds: recordingStopDelay - recordingStartDelay),
       () {
-        player.play(AssetSource(stopSoundPath), volume: 200);
         saveData();
+        try {
+          player.play(AssetSource(stopSoundPath), volume: 200);
+        } catch (e, stack) {
+          debugPrint('Stop recording sound error: $e\n$stack');
+        }
       },
     );
   }
@@ -159,13 +165,23 @@ class SensorsViewModel extends ChangeNotifier {
 
   String filePath = '';
 
+  String additionalFolder = '';
+  String additionalFileLabel = '';
+
+  String get fileLabel {
+    if (additionalFileLabel == '') {
+      return '';
+    }
+    return '${additionalFileLabel}_';
+  }
+
   Future setFilePath() async {
     // final directory = await getExternalStorageDirectory();
     Directory(
-            '/storage/emulated/0/Download/sensors_labeling_data/${labels[labelIndex]}')
+            '/storage/emulated/0/Download/sensors_labeling_data/$additionalFolder${labels[labelIndex]}')
         .createSync(recursive: true);
     filePath =
-        '/storage/emulated/0/Download/sensors_labeling_data/${labels[labelIndex]}/${DateTime.now().microsecondsSinceEpoch}.txt';
+        '/storage/emulated/0/Download/sensors_labeling_data/$additionalFolder${labels[labelIndex]}/$fileLabel${DateTime.now().microsecondsSinceEpoch}.txt';
   }
 
   List<String> labels = ['FALLING', 'CLIMBING', 'WALKING', 'SUCCESSFULL'];

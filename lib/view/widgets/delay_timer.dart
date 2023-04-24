@@ -22,9 +22,13 @@ class _DelayTimerState extends State<DelayTimer> {
   void initState() {
     seconds = widget.seconds;
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
-      if (widget.ref != null && seconds < 5 && seconds > 0) {
+      if (widget.ref != null && seconds < 5 && seconds > 1) {
         final sensorsVM = widget.ref!.read(sensorsProvider);
-        sensorsVM.player.play(AssetSource(SensorsViewModel.tickSoundPath));
+        try {
+          sensorsVM.player.play(AssetSource(SensorsViewModel.tickSoundPath));
+        } catch (e, stack) {
+          debugPrint('Tick sound playing error: $e\n$stack');
+        }
       }
       setState(() {
         seconds--;
