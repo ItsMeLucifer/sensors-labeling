@@ -115,6 +115,16 @@ class SideMenu extends ConsumerWidget {
             ),
           ),
         ),
+        SizedBox(
+          height: 40,
+          child: ElevatedButton(
+            onPressed: sensorsVM.startDataRecording,
+            child: const Text(
+              'START LOOP',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -125,7 +135,7 @@ class SideMenu extends ConsumerWidget {
     required int value,
     required void Function(int) onChanged,
     int min = 0,
-    int max = 100,
+    int max = 150,
   }) {
     return [
       Text(

@@ -122,6 +122,13 @@ class SensorsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future startLoop() async {
+    for (int i = 0; i < 10; i++) {
+      await startDataRecording()
+          .then((_) => Future.delayed(const Duration(seconds: 5)));
+    }
+  }
+
   Future<void> startDataRecording() async {
     debugPrint(
         'start delay : $recordingStartDelay\nstop delay: $recordingStopDelay');
@@ -184,7 +191,7 @@ class SensorsViewModel extends ChangeNotifier {
         '/storage/emulated/0/Download/sensors_labeling_data/$additionalFolder${labels[labelIndex]}/$fileLabel${DateTime.now().microsecondsSinceEpoch}.txt';
   }
 
-  List<String> labels = ['FALLING', 'CLIMBING', 'WALKING', 'SUCCESSFULL'];
+  List<String> labels = ['FALLING', 'CLIMBING', 'WALKING', 'DOWNTIME'];
 
   int labelIndex = 0;
 
